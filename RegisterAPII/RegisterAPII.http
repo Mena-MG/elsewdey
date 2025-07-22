@@ -1,0 +1,6 @@
+@RegisterAPII_HostAddress = http://localhost:3000/
+
+GET {{RegisterAPII_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

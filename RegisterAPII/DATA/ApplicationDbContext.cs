@@ -1,4 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore;
 using RegisterAPII.Models;
 
 namespace RegisterAPII.DATA
@@ -16,6 +16,9 @@ namespace RegisterAPII.DATA
         public DbSet<Session> Sessions { get; set; }
         public DbSet<SubordinateTicket> subordinateTickets { get; set; }
         public DbSet<StudentProfile> StudentProfiles { get; set; }
+        public DbSet<Note> Notes { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
+        public DbSet<Report> Reports { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -41,6 +44,50 @@ namespace RegisterAPII.DATA
                 .Property(e => e.BadNotesJson)
                 .HasDefaultValue("[]");
 
+            // --- Configure Note relationships ---
+            modelBuilder.Entity<Note>()
+                .HasOne(n => n.StudentProfile)
+                .WithMany()
+                .HasForeignKey(n => n.StudentProfileId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Note>()
+                .HasOne(n => n.CreatedBy)
+                .WithMany()
+                .HasForeignKey(n => n.CreatedByAccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // --- Configure Notification relationships ---
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.FromAccount)
+                .WithMany()
+                .HasForeignKey(n => n.FromAccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Notification>()
+                .HasOne(n => n.ToAccount)
+                .WithMany()
+                .HasForeignKey(n => n.ToAccountId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // --- Configure Report relationships ---
+            modelBuilder.Entity<Report>()
+                .HasOne(r => r.StudentProfile)
+                .WithMany()
+                .HasForeignKey(r => r.StudentProfileId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Report>()
+                .HasOne(r => r.CreatedBy)
+                .WithMany()
+                .HasForeignKey(r => r.CreatedByAccountId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<Report>()
+                .HasOne(r => r.ReviewedBy)
+                .WithMany()
+                .HasForeignKey(r => r.ReviewedByAccountId)
+                .OnDelete(DeleteBehavior.SetNull);
 
             // --- Configure one-to-one relationship between Accounts and LoginAccount ---
             modelBuilder.Entity<Accounts>()

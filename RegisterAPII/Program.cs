@@ -36,6 +36,12 @@ builder.Services.AddScoped<EmailService>();
 builder.Services.AddScoped<IStudentProfileRepository, StudentProfileRepository>();
 builder.Services.AddScoped<IGradeRepository, GradeRepository>();
 
+// Add new services
+builder.Services.AddScoped<INotificationService, NotificationService>();
+builder.Services.AddScoped<INoteService, NoteService>();
+builder.Services.AddScoped<IReportService, ReportService>();
+builder.Services.AddScoped<IStaffManagementService, StaffManagementService>();
+
 builder.Services.AddScoped<IJwtService>(provider =>
     new JwtService(builder.Configuration["Jwt:Key"]));
 
